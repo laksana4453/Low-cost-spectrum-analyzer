@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:padding="20dp"
+    android:background="@color/white"
+    android:gravity="center">
+
+    <TextView
+        style="@style/text_normal"
+        android:textSize="20sp"
+        android:id="@+id/scriptionDialog"
+        android:text="@string/do_you_went_to_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:textColor="@color/seafoam_dark"
+            android:background="@drawable/bt_present_data"
+            android:id="@+id/btYes"
+            android:text="@string/yes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"/>
+        <Button
+            android:textColor="@color/seafoam_dark"
+            android:background="@drawable/bt_present_data"
+            android:id="@+id/btNo"
+            android:text="@string/no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"/>
+    </LinearLayout>
+
+</LinearLayout>

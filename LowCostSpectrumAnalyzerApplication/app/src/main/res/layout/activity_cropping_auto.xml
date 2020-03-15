@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CroppingActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="16dp">
+        <th.ac.kku.udomboonyaluck.disra.lowcostspectrumanalyzerapplication.EditPhotoView
+            android:id="@+id/editable_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fff"
+            android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="bottom"
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="2">
+        <Button
+            android:drawableBottom="@drawable/ic_rotate_left_gray"
+            android:textColor="@color/blue"
+            android:background="@drawable/bt_rotate_left"
+            style="@style/Text_bt_analyze"
+            android:id="@+id/rotate_button_left"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:textSize="20sp"/>
+        <Button
+            android:drawableBottom="@drawable/ic_rotate_right_gray"
+            android:textColor="@color/blue"
+            android:background="@drawable/bt_rotate_rigth"
+            style="@style/Text_bt_analyze"
+            android:id="@+id/rotate_button_right"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:textSize="20sp"/>
+        <Button
+            android:textColor="@color/pink"
+            android:background="@drawable/bt_crop"
+            style="@style/Text_bt_analyze"
+            android:onClick="createCropImage"
+            android:id="@+id/crop_button"
+            android:text="crop"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_margin="16dp"-->
+<!--        >-->
+
+<!--        <th.ac.kku.udomboonyaluck.disra.lowcostspectrumanalyzerapplication.EditPhotoView-->
+<!--            android:id="@+id/editable_image"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="#fff"-->
+<!--            android:layout_weight="1"/>-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/line1"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_marginTop="10dp">-->
+<!--            <Button-->
+<!--                android:id="@+id/rotate_button"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:text="rotate"-->
+<!--                android:textSize="20sp"/>-->
+<!--            <Button-->
+<!--                android:onClick="createCropImage"-->
+<!--                android:id="@+id/crop_button"-->
+<!--                android:text="crop"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textSize="20sp"/>-->
+<!--        </LinearLayout>-->
+
+
+
+<!--    </LinearLayout>-->
+
+</FrameLayout>

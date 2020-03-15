@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@color/white"
+    android:gravity="center">
+    <View
+        android:background="@drawable/bg_blue"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"></View>
+
+    <LinearLayout
+        android:id="@+id/line1"
+        android:layout_marginTop="110dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/spectrum"
+            android:tag="noImage"
+            android:layout_margin="15dp"
+            android:src="@drawable/show_image_analyze_sample"
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+           />
+        <LinearLayout
+            android:layout_margin="10dp"
+            android:layout_below="@+id/line1"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:gravity="center"
+                android:layout_below="@+id/line2"
+                android:id="@+id/line2"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:weightSum="3"
+                android:layout_height="wrap_content">
+                <Button
+                    android:onClick="PickImage"
+                    style="@style/Text_bt_analyze"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_bt_pick_image_analyze"
+                    android:textAllCaps="false"
+                    android:text="Pick
+                    Image"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"></Button>
+                <Button
+                    style="@style/Text_bt_analyze"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_bt_graph_sp_analyze"
+                    android:textAllCaps="false"
+                    android:text="Create graph spectrum"
+                    android:onClick="analyzeImage"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"></Button>
+                <Button
+                    style="@style/Text_bt_analyze"
+                    android:onClick="showAbsorbGraph"
+                    android:background="@drawable/color_bt_graph_ab_analyze"
+                    android:layout_margin="10dp"
+                    android:textAllCaps="false"
+                    android:text="Create Graph Absorption"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"></Button>
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/line2"
+                android:id="@+id/line3"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:weightSum="3"
+                android:layout_height="wrap_content">
+                <Button
+                    style="@style/Text_bt_analyze"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_bt_save_data_analyze"
+                    android:textAllCaps="false"
+                    android:text="Save Data"
+                    android:onClick="saveData"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"></Button>
+                <Button
+                    style="@style/Text_bt_analyze"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/color_bt_load_data_analyze"
+                    android:textAllCaps="false"
+                    android:text="Load Data"
+                    android:onClick="loadData"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"></Button>
+                <Button
+                    android:onClick="setting_mode"
+                    style="@style/Text_bt_analyze"
+                    android:background="@drawable/color_bt_setting_setting"
+                    android:layout_margin="10dp"
+                    android:textAllCaps="false"
+                    android:text="Setting Mode"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"></Button>
+
+            </LinearLayout>
+         <TextView
+                android:id="@+id/scriptGraph"
+                android:visibility="invisible"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                style="@style/text_normal"
+                android:textColor="@color/blue"
+                android:text="Graph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></TextView>
+        </LinearLayout>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart1"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

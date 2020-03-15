@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CompareDataActivity">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+    <Button
+        android:layout_margin="15dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/seafoam_dark"
+        android:background="@drawable/bt_present_data"
+        style="@style/Text_bt_analyze"
+        android:id="@+id/btCreateGraph"
+        android:onClick="showData"
+        android:text="create graph"
+        android:layout_below="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></Button>
+    <TextView
+        android:id="@+id/txtDataState"
+        android:layout_below="@+id/btCreateGraph"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></TextView>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:layout_below="@+id/txtDataState"
+        android:id="@+id/chart1"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_weight="1">
+    </com.github.mikephil.charting.charts.LineChart>
+
+
+
+
+
+</RelativeLayout>

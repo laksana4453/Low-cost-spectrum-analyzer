@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name='Low Cost Spectrum Analyzer Application'

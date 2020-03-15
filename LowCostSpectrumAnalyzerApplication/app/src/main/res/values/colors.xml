@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="white">#ffff</color>
+    <color name="gray_dark">#707070</color>
+    <color name="pink">#F82E9A</color>
+    <color name="purple">#D79AF5</color>
+    <color name="light_pink">#FFECEC</color>
+    <color name="arctic">#B7F9FE</color>
+    <color name="arctic_dark">#4CE8C3</color>
+    <color name="blue">#4C6BE8</color>
+    <color name="blue_light">#B7CCFE</color>
+    <color name="punch">#E84C57</color>
+    <color name="ballet_slipper">#FEB7E2</color>
+    <color name="gray_light">#F1E3EB</color>
+    <color name="black_brown">#6D6262</color>
+    <color name="emerald">#4CE885</color>
+    <color name="lime">#F3FEB7</color>
+    <color name="tangerine">#FF9100</color>
+    <color name="yellow">#FFF700</color>
+    <color name="teal">#7CCACE</color>
+    <color name="blue_list_item">#73C2ED</color>
+    <color name="seafoam">#BBFFE3</color>
+    <color name="seafoam_dark">#20959C</color>
+
+
+</resources>

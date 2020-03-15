@@ -1,0 +1,43 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="text_normal">
+        <item name="android:textColor">@color/gray_dark</item>
+        <item name="android:fontFamily">@font/convergence</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:padding">5dp</item>
+    </style>
+    <style name="Text_bt_setting">
+        <item name="android:textColor">@color/light_pink</item>
+        <item name="android:fontFamily">@font/coiny</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:padding">5dp</item>
+    </style>
+    <style name="Text_bt_analyze">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/convergence</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:padding">5dp</item>
+    </style>
+    <style name="text_title">
+        <item name="android:textColor">@color/teal</item>
+        <item name="android:fontFamily">@font/convergence</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:padding">5dp</item>
+
+    </style>
+    <style name="btt" parent="Base.Widget.AppCompat.Button">
+        <item name="colorButtonNormal">@color/arctic</item>
+        <item name="colorControlHighlight">@color/arctic_dark</item>
+    </style>
+</resources>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Configuration">
+    <View
+        android:id="@+id/bg_plane"
+        android:background="@drawable/bg_plane"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"></View>
+
+    <LinearLayout
+        android:layout_below="@+id/bg_plane"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/teal"
+            style="@style/text_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/configuration" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            style="@style/text_normal"
+            android:text="@string/please_shoot_the_spectrum_without_samples"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:tag="noImage"
+            android:src="@drawable/show_image_setting"
+            android:layout_gravity="center"
+            android:id="@+id/spectrum"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:weightSum="3"
+            >
+
+            <TextView
+                android:textColor="@color/teal"
+                style="@style/text_normal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/order"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_weight="1.5"
+                >
+
+                <ImageButton
+                    android:id="@+id/decrease"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_arrow_left"
+                    android:layout_weight="1"
+                    android:onClick="minus_n"
+                    />
+
+                <TextView
+                    android:id="@+id/order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_0"
+                    android:textSize="16sp"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    />
+
+                <ImageButton
+                    android:id="@+id/increase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_arrow_right"
+                    android:layout_weight="1"
+                    android:onClick="add_n"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:background="@drawable/color_bt_analyze_setting"
+                style="@style/Text_bt_setting"
+                android:id="@+id/getPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/photo"
+                android:textSize="16sp"
+                android:onClick="PickImage"
+                />
+
+            <Button
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
+                android:background="@drawable/color_bt_setting_setting"
+                style="@style/Text_bt_setting"
+                android:id="@+id/finConfig"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/finish"
+                android:textSize="16sp"
+                android:onClick="send_parameter"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

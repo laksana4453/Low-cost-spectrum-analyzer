@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Low Cost Spectrum Analyzer Application</string>
+    <string name="order">Order</string>
+    <string name="_0">0</string>
+    <string name="configuration">Configuration</string>
+    <string name="photo">Pick Image</string>
+    <string name="finish">Finish</string>
+    <string name="please_shoot_the_spectrum_without_samples">Please shoot the spectrum without sample.</string>
+    <string name="welocome_to_spectrum_world">Welocome to Spectrum World!</string>
+    <string name="analyze">Analyze</string>
+    <string name="config">Config</string>
+    <string name="show_spectrum">Show \nspectrum</string>
+    <string name="save">Save</string>
+    <string name="load">Load</string>
+    <string name="show_absorbance">Show absorbance</string>
+    <string name="coffee">name of sample</string>
+    <string name="please_enter_your_records_name">Please enter your records name.</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_all">Delete all</string>
+    <string name="do_you_went_to_delete">Do you went to delete this data ?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="absorbance">Absorbance</string>
+    <string name="spectrum">Spectrum</string>
+    <string name="show_graphs">Show graphs</string>
+</resources>
