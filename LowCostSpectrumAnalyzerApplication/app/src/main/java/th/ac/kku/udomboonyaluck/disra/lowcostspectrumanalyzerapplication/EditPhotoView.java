@@ -90,27 +90,10 @@ public class EditPhotoView extends FrameLayout {
     /**
      * rotate image
      */
-    public void rotateImageViewRight() {
+    public void rotateImageView() {
         if (editableImage.getActiveBoxIdx() >= 0) {
             //rotate bitmap
             editableImage.rotateOriginalImage(90);
-
-            //re-calculate and draw selection box
-            editableImage.getActiveBox().setX1(0);
-            editableImage.getActiveBox().setY1(0);
-            editableImage.getActiveBox().setX2(editableImage.getActualSize()[0]);
-            editableImage.getActiveBox().setY2(editableImage.getActualSize()[1]);
-            selectionView.setBoxSize(editableImage, editableImage.getBoxes(), editableImage.getViewWidth(), editableImage.getViewHeight());
-
-            //set bitmap as view
-            imageView.setImageBitmap(editableImage.getOriginalImage());
-        }
-    }
-
-    public void rotateImageViewLeft() {
-        if (editableImage.getActiveBoxIdx() >= 0) {
-            //rotate bitmap
-            editableImage.rotateOriginalImage(-90);
 
             //re-calculate and draw selection box
             editableImage.getActiveBox().setX1(0);

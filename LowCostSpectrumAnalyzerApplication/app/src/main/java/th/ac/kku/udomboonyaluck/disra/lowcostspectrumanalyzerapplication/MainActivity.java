@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -198,6 +199,8 @@ public class MainActivity extends AppCompatActivity {
         descriptionGraph.setText("Spectrum Graph");
         chart.setVisibility(View.VISIBLE);
         chart.setBackgroundColor(Color.WHITE);
+        chart.setVisibleXRange(400,740);
+        chart.setVisibleYRangeMaximum(2, YAxis.AxisDependency.LEFT);
 
         // disable description text
         chart.getDescription().setEnabled(false);

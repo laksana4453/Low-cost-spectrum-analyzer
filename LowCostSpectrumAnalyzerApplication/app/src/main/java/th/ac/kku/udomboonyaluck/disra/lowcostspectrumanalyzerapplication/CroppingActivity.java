@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -47,21 +46,11 @@ public class CroppingActivity extends AppCompatActivity {
             }
         });
 
-        Button buttonLeft = (Button)findViewById(R.id.rotate_button_left);
-        buttonLeft.setOnClickListener(new View.OnClickListener() {
+        Button button = (Button)findViewById(R.id.rotate_button);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                imageView.rotateImageView();
-                imageView.rotateImageViewLeft();
-
-            }
-        });
-        Button buttonRight = (Button)findViewById(R.id.rotate_button_right);
-        buttonRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                imageView.rotateImageView();
-                imageView.rotateImageViewRight();
+                imageView.rotateImageView();
             }
         });
     }
@@ -72,7 +61,6 @@ public class CroppingActivity extends AppCompatActivity {
         int y2 = text_height;
         int width = text_width - x;
         int height = text_height-y;
-        Log.d("Width Heigt", "x : " + x + " y : " + y + " x2 : " + x2 + " y2 : " + y2 + " width : " + width + " height : " + height);
         Matrix matrix = new Matrix();
         matrix.postScale(0.5f, 0.5f);
         Bitmap croppedBitmap = Bitmap.createBitmap(image.getOriginalImage(), x, y, width, height, matrix, true);

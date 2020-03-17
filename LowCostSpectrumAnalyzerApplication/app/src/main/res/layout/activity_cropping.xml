@@ -27,28 +27,18 @@
         android:gravity="center"
         android:weightSum="2">
         <Button
-            android:drawableBottom="@drawable/ic_rotate_left_gray"
             android:textColor="@color/blue"
-            android:background="@drawable/bt_rotate_left"
+            android:background="@color/arctic"
             style="@style/Text_bt_analyze"
-            android:id="@+id/rotate_button_left"
+            android:id="@+id/rotate_button"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:textSize="20sp"/>
-        <Button
-            android:drawableBottom="@drawable/ic_rotate_right_gray"
-            android:textColor="@color/blue"
-            android:background="@drawable/bt_rotate_rigth"
-            style="@style/Text_bt_analyze"
-            android:id="@+id/rotate_button_right"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="match_parent"
+            android:text="rotate"
             android:textSize="20sp"/>
         <Button
             android:textColor="@color/pink"
-            android:background="@drawable/bt_crop"
+            android:background="@color/ballet_slipper"
             style="@style/Text_bt_analyze"
             android:onClick="createCropImage"
             android:id="@+id/crop_button"

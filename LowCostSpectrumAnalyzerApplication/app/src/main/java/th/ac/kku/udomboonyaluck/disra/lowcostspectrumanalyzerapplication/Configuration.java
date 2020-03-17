@@ -84,6 +84,7 @@ public class Configuration extends AppCompatActivity {
                     R.drawable.show_image_setting);
             sendImage.getInstance().setBitmap(icon);
         }
+
     }
 
     private Bitmap decodeImage(String encodedImage) {

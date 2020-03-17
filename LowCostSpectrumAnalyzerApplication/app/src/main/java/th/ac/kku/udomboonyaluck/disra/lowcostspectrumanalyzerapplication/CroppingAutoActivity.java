@@ -63,21 +63,13 @@ public class CroppingAutoActivity extends AppCompatActivity {
         boxes.add(box1);
         image.setBoxes(boxes);
         imageView.initView(this, image);
-        Button buttonLeft = (Button)findViewById(R.id.rotate_button_left);
-        buttonLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                imageView.rotateImageView();
-                imageView.rotateImageViewLeft();
 
-            }
-        });
-        Button buttonRight = (Button)findViewById(R.id.rotate_button_right);
-        buttonRight.setOnClickListener(new View.OnClickListener() {
+
+        Button button = (Button)findViewById(R.id.rotate_button);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                imageView.rotateImageView();
-                imageView.rotateImageViewRight();
+                imageView.rotateImageView();
             }
         });
     }
