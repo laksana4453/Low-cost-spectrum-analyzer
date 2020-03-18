@@ -74,9 +74,17 @@ public class MainActivity extends AppCompatActivity {
     private TextView peak_txt,n_txt,peak_txt2,descriptionGraph;
     private int GALLERY = 1, CAMERA = 2;
     private static final String IMAGE_DIRECTORY = "/demonuts";
+    private Button showSpec,showAbsorb;
     final Context context = this;
     public SQLiteDatabaseHandler db;
     Boolean hasData = Boolean.FALSE;
+    private int width,height;
+    private List<Data> datas;
+    private int position,peak,n,x;
+    double lambda,d,f;
+    List<Double> lambdaRange;
+    List<Integer> new_x,new_lambda;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,37 +93,57 @@ public class MainActivity extends AppCompatActivity {
         requestMultiplePermissions();
         db = new SQLiteDatabaseHandler(this);
 
-
-//        int peak = colletionPeakN.getInstance().getPeak();
-//        int n = colletionPeakN.getInstance().getN();
-//        Log.d("1234",n + " " + peak);
-//        if(colletionPeakN.getInstance()!= null){
-//            peak_txt.setText(String.valueOf(peak));
-//            n_txt.setText(String.valueOf(n));
-//        }else {
-//            peak_txt.setText(0);
-//            n_txt.setText(0);
-//        }
-
         chart = (LineChart) findViewById(R.id.chart1);
         descriptionGraph = (TextView) findViewById(R.id.scriptGraph);
+        showSpec = findViewById(R.id.showSpec);
+        showAbsorb = findViewById(R.id.showAbsorb);
         mImageView = findViewById(R.id.spectrum);
         if(imageForAnalyze.getInstance().getBitmap()!= null){
             mImageView.setImageBitmap(imageForAnalyze.getInstance().getBitmap());
             mImageView.setTag("haveImage");
+
+            width = imageForAnalyze.getInstance().getBitmap().getWidth();
+            height = imageForAnalyze.getInstance().getBitmap().getHeight();
         }
 
+        datas = db.allDatas();
+        peak = datas.get(0).getHeight();
+        n = datas.get(0).getN();
 
-    }
-    public double calculate(double x) {
-        List<Data> datas = db.allDatas();
-        int peak = datas.get(0).getHeight();
-        int n = datas.get(0).getN();
-        double d = 1.0/(600*Math.pow(10,3));
-        double lamda = 460/Math.pow(10,9);
-        double l = Math.sqrt(Math.pow((d*peak)/(n*lamda),2)- Math.pow(peak,2));
-        double sin = x/Math.sqrt(Math.pow(x,2)+Math.pow(l,2));
-        return   ((d*sin)/n) *Math.pow(10,9);
+        lambda = 460/Math.pow(10,9);
+        d = 1.0/(600*Math.pow(10,3));
+
+        lambdaRange = new ArrayList<>();
+        new_x = new ArrayList<>();
+        new_lambda = new ArrayList<>();
+
+        for(int i = 380; i <= 740; i++){
+            lambdaRange.add(i/Math.pow(10,9));
+        }
+
+        showSpec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(imageForAnalyze.getInstance().getBitmap()!= null) {
+                    showGraph(imageForAnalyze.getInstance().getBitmap());
+                } else {
+                    showDialogImageNull();
+                }
+            }
+        });
+
+        showAbsorb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(imageForAnalyze.getInstance().getBitmap()!= null) {
+                    Bitmap defaultImage = decodeImage(datas.get(0).getPosition());
+                    showAbsorbGraph(defaultImage,imageForAnalyze.getInstance().getBitmap());
+                } else {
+                    showDialogImageNull();
+                }
+            }
+        });
+
     }
     public String encodeImage(Bitmap image){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -124,61 +152,10 @@ public class MainActivity extends AppCompatActivity {
         String imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return imageString;
     }
-    public void analyzeImage(View view){
-
-        BitmapDrawable drawable = (BitmapDrawable) mImageView.getDrawable();
-
-        if(drawable != null){
-            Bitmap imageBitmap = drawable.getBitmap();
-            //covert image to string and collect imageString
-            imageForAnalyze.getInstance().setImageStringAnalyze(encodeImage(imageBitmap));
-
-            double  R ,G ,B;
-            int colorPixel;
-            int width = imageBitmap.getWidth();
-            int height = imageBitmap.getHeight();
-            double[][] imageArray= new double[width][3];
-
-            for(int x = 0; x < width; x++ ){
-                for(int y = 0; y < height;y++){
-                    colorPixel = imageBitmap.getPixel(x,y);
-                    R = Color.red(colorPixel);
-                    G = Color.green(colorPixel);
-                    B = Color.blue(colorPixel);
-
-                    R =  ((0.07*R)+(0.52*G)+(0.23*B))/255;
-                    imageArray[x][0] = R/255;
-                    imageArray[x][1] = R/255;
-                    imageArray[x][2] = R/255;
-
-
-                }
-            }
-
-            double[][] M = new double[][] { { 0.49, 0.31, 0.20 }, { 0.17697, 0.81240, 0.01063 }, { 0.00, 0.01, 0.99 } };
-            double X,Y,Z;
-            List<Double> Xarr= new ArrayList<Double>();
-            List<Double> Yarr= new ArrayList<Double>();
-            List<Double> Zarr= new ArrayList<Double>();
-
-            for(int i = 0;i< width;i++ ){
-                X = M[0][0]*imageArray[i][2] + M[0][1]*imageArray[i][1] + M[0][2]*imageArray[i][0];
-                Y = M[1][0]*imageArray[i][2] + M[1][1]*imageArray[i][1] + M[1][2]*imageArray[i][0];
-                Z = M[2][0]*imageArray[i][2] + M[2][1]*imageArray[i][1] + M[2][2]*imageArray[i][0];
-                Xarr.add(X*1000);
-                Yarr.add(Y*10);
-                Zarr.add(Z*10);
-
-
-            }
-            if(mImageView.getTag().equals("haveImage")){
-                createGraph(Xarr);
-            }else {
-               showDialogImageNull();
-            }
-        }else {
-            Toast.makeText(MainActivity.this,"Please choose or take a picture before analyze",Toast.LENGTH_LONG).show();
-        }
+    private Bitmap decodeImage(String encodedImage) {
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
     }
     private void showDialogImageNull(){
         final Dialog di_warning = new Dialog(context);
@@ -194,132 +171,7 @@ public class MainActivity extends AppCompatActivity {
         });
         di_warning.show();
     }
-    private void createGraph(List<Double> Yaxis) {
-        descriptionGraph.setVisibility(View.VISIBLE);
-        descriptionGraph.setText("Spectrum Graph");
-        chart.setVisibility(View.VISIBLE);
-        chart.setBackgroundColor(Color.WHITE);
-        chart.setVisibleXRange(400,740);
-        chart.setVisibleYRangeMaximum(2, YAxis.AxisDependency.LEFT);
 
-        // disable description text
-        chart.getDescription().setEnabled(false);
-
-        // enable touch gestures
-        chart.setTouchEnabled(true);
-
-        // set listeners
-
-        chart.setDrawGridBackground(false);
-
-        // create marker to display box when values are selected
-        MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
-
-        // Set the marker to the chart
-        mv.setChartView(chart);
-        chart.setMarker(mv);
-
-        // enable scaling and dragging
-        chart.setDragEnabled(true);
-        chart.setScaleEnabled(true);
-        // chart.setScaleXEnabled(true);
-        // chart.setScaleYEnabled(true);
-
-        // force pinch zoom along both axis
-        chart.setPinchZoom(true);
-        // draw points over time
-        chart.animateX(1500);
-
-        // get the legend (only possible after setting data)
-        Legend l = chart.getLegend();
-
-        // draw legend entries as lines
-        l.setForm(Legend.LegendForm.LINE);
-        ArrayList<Entry> values = new ArrayList<>();
-        // add point in graph
-        Log.d("1234","maxValue"+ Collections.max(Yaxis));
-
-        for(int i = 0 ; i < Yaxis.size() ; i++){
-
-            Float y = Float.valueOf("" + Yaxis.get(i));
-            Double x = Double.valueOf(i);
-//            Log.d("123","peak-x : "+peak[0]);
-
-            values.add(new Entry( Float.valueOf((float) calculate(x)),y));
-
-        }
-
-//        values.add(new Entry(0, 4));
-
-        LineDataSet set1;
-
-        if (chart.getData() != null &&
-                chart.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-            set1.setValues(values);
-            set1.notifyDataSetChanged();
-            chart.getData().notifyDataChanged();
-            chart.notifyDataSetChanged();
-        } else {
-            // create a dataset and give it a type
-            set1 = new LineDataSet(values, "DataSet 1");
-
-            set1.setDrawIcons(false);
-
-            // draw dashed line
-            set1.enableDashedLine(10f, 5f, 0f);
-
-            // black lines and points
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLACK);
-
-            // line thickness and point size
-            set1.setLineWidth(1f);
-            set1.setCircleRadius(3f);
-
-            // draw points as solid circles
-            set1.setDrawCircleHole(false);
-
-            // customize legend entry
-            set1.setFormLineWidth(1f);
-            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-            set1.setFormSize(15.f);
-
-            // text size of values
-            set1.setValueTextSize(9f);
-
-            // draw selection line as dashed
-            set1.enableDashedHighlightLine(10f, 5f, 0f);
-
-            // set the filled area
-            set1.setDrawFilled(true);
-            set1.setFillFormatter(new IFillFormatter() {
-                @Override
-                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-                    return chart.getAxisLeft().getAxisMinimum();
-                }
-            });
-
-            // set color of filled area
-            if (Utils.getSDKInt() >= 18) {
-                //Not set the graph color
-                set1.setFillColor(Color.WHITE);
-            } else {
-                set1.setFillColor(Color.BLACK);
-            }
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1); // add the data sets
-
-            // create a data object with the data sets
-            LineData data = new LineData(dataSets);
-
-            // set data
-            chart.setData(data);
-
-
-        }
-    }
     public  void PickImage(View view){
         showPictureDialog();
     }
@@ -552,25 +404,49 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void showGraph(Bitmap image) {
+        List<Double> intensity,spec380to740;
+        List<Integer> intervalIntensity;
+        intensity = findXarr(image);
+        intervalIntensity = findNewX();
 
-    public void showAbsorbGraph(View view){
-        descriptionGraph.setText("Absorption Graph");
-        List<Double> spectrum = analyzeImageSpectrum();
-        if(spectrum != null){
-            List<Double> absorb = analyzeImageAbsorb();
-            List<Double> result = new ArrayList<Double>();
-            for(int i = 0;i < spectrum.size();i++){
-                result.add(absorb.get(i)/spectrum.get(i)) ;
-            }
-            createGraphAbsorb(result);
-        } else {
-            showDialogImageNull();
+        spec380to740 = new ArrayList<>();
+
+        for(int i = 0;i < intervalIntensity.size();i++){
+            spec380to740.add(intensity.get(intervalIntensity.get(i)-x+peak));
         }
 
+        createGraph(spec380to740);
     }
 
-    private void createGraphAbsorb(List<Double> Yaxis) {
+    private void showAbsorbGraph(Bitmap defaultImage, Bitmap image) {
+        List<Double> intensityDef,intensityImg,intensityAb,spec380to740Ab;
+        List<Integer> intervalIntensity;
+        intensityDef = findXarr(defaultImage);
+        intensityImg = findXarr(image);
+        intervalIntensity = findNewX();
 
+        intensityAb = new ArrayList<>();
+        spec380to740Ab = new ArrayList<>();
+
+        for(int i = 0; i < intensityImg.size(); i++) {
+            if(intensityImg.get(i) != (double) 0){
+                intensityAb.add(intensityDef.get(i)/intensityImg.get(i));
+            } else {
+                intensityAb.add((double) 0);
+            }
+        }
+
+        for(int i = 0;i < intervalIntensity.size();i++){
+            spec380to740Ab.add(intensityAb.get(intervalIntensity.get(i)-x+peak));
+        }
+
+        createGraph(spec380to740Ab);
+    }
+
+    private void createGraph(List<Double> Yaxis) {
+        chart.setVisibility(View.VISIBLE);
+        chart.getXAxis().setLabelCount(9,true);
         chart.setBackgroundColor(Color.WHITE);
 
         // disable description text
@@ -608,27 +484,18 @@ public class MainActivity extends AppCompatActivity {
         l.setForm(Legend.LegendForm.LINE);
         ArrayList<Entry> values = new ArrayList<>();
         // add point in graph
-        Log.d("1234","maxValue"+ Collections.max(Yaxis));
+        Log.d("1234", "maxValue" + Collections.max(Yaxis));
 
-//        List<Double> Xarr= new ArrayList<Double>();
-//        double[] peak = new double[1];
-//        for(int i = 0 ; i < Yaxis.size() ; i++) {
-//            if (Yaxis.get(i) == Collections.max(Yaxis)) {
-//                peak[0] = i;
-//            }
-//        }
-//
-//        int peak = colletionPeakN.getInstance().getPeak();
-//        Log.d("789",peak[0]+"");
-//        peak_txt2.setText(String.valueOf(peak[0]));
+        for(int i = 380 ; i <= 740; i++){
+            new_lambda.add(i);
+        }
 
-        for(int i = 0 ; i < Yaxis.size() ; i++){
+        for (int i = 0; i < Yaxis.size(); i++) {
 
-            Float y = Float.valueOf("" + Yaxis.get(i));
-            Double x = Double.valueOf(i);
+            float y = Float.parseFloat("" + Yaxis.get(i));
 //            Log.d("123","peak-x : "+peak[0]);
 
-            values.add(new Entry( Float.valueOf((float) calculate(x)),y));
+            values.add(new Entry(new_lambda.get(i), y));
 
         }
 
@@ -704,107 +571,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public List<Double> analyzeImageSpectrum() {
-        BitmapDrawable drawable = (BitmapDrawable) mImageView.getDrawable();
-        if(mImageView.getTag().equals("haveImage")){
-            Bitmap imageBitmap = drawable.getBitmap();
-
-            double R, G, B;
-            int colorPixel;
-            int width = imageBitmap.getWidth();
-            int height = imageBitmap.getHeight();
-            double[][] imageArray = new double[width][3];
-
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    colorPixel = imageBitmap.getPixel(x, y);
-                    R = Color.red(colorPixel);
-                    G = Color.green(colorPixel);
-                    B = Color.blue(colorPixel);
-
-                    R = ((0.07 * R) + (0.52 * G) + (0.23 * B)) / 255;
-                    imageArray[x][0] = R / 255;
-                    imageArray[x][1] = R / 255;
-                    imageArray[x][2] = R / 255;
-
-
-                }
-            }
-
-            double[][] M = new double[][]{{0.49, 0.31, 0.20}, {0.17697, 0.81240, 0.01063}, {0.00, 0.01, 0.99}};
-            double X, Y, Z;
-            List<Double> Xarr = new ArrayList<Double>();
-            List<Double> Yarr = new ArrayList<Double>();
-            List<Double> Zarr = new ArrayList<Double>();
-
-            for (int i = 0; i < width; i++) {
-                X = M[0][0] * imageArray[i][2] + M[0][1] * imageArray[i][1] + M[0][2] * imageArray[i][0];
-                Y = M[1][0] * imageArray[i][2] + M[1][1] * imageArray[i][1] + M[1][2] * imageArray[i][0];
-                Z = M[2][0] * imageArray[i][2] + M[2][1] * imageArray[i][1] + M[2][2] * imageArray[i][0];
-                Xarr.add(X * 1000);
-                Yarr.add(Y * 10);
-                Zarr.add(Z * 10);
-
-            }
-            return Xarr;
-        } else {
-
-            return null;
-        }
-    }
-
-    public List<Double> analyzeImageAbsorb() {
-        Bitmap defaultImage = null;
-        List<Data> datas = db.allDatas();
-
-        for (int i = 0; i < datas.size(); i++){
-            if(datas.get(i).getName().equals("Default"))
-                defaultImage = decodeImage(datas.get(i).getPosition());
-        }
-
-        double R, G, B;
+    public List<Double> findXarr(Bitmap image){
+        double  R ,G ,B;
         int colorPixel;
-        int width = defaultImage.getWidth();
-        int height = defaultImage.getHeight();
-        double[][] imageArray = new double[width][3];
+        double[][] imageArray= new double[width][3];
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                colorPixel = defaultImage.getPixel(x, y);
+        for(int x = 0; x < width; x++ ){
+            for(int y = 0; y < height;y++){
+                colorPixel = image.getPixel(x,y);
                 R = Color.red(colorPixel);
                 G = Color.green(colorPixel);
                 B = Color.blue(colorPixel);
 
-                R = ((0.07 * R) + (0.52 * G) + (0.23 * B)) / 255;
-                imageArray[x][0] = R / 255;
-                imageArray[x][1] = R / 255;
-                imageArray[x][2] = R / 255;
-
-
+                R =  ((0.07*R)+(0.52*G)+(0.23*B))/255;
+                imageArray[x][0] = R/255;
+                imageArray[x][1] = R/255;
+                imageArray[x][2] = R/255;
             }
         }
 
-        double[][] M = new double[][]{{0.49, 0.31, 0.20}, {0.17697, 0.81240, 0.01063}, {0.00, 0.01, 0.99}};
-        double X, Y, Z;
-        List<Double> Xarr = new ArrayList<Double>();
-        List<Double> Yarr = new ArrayList<Double>();
-        List<Double> Zarr = new ArrayList<Double>();
+        double[][] M = new double[][] { { 0.49, 0.31, 0.20 }, { 0.17697, 0.81240, 0.01063 }, { 0.00, 0.01, 0.99 } };
+        double X;
+        List<Double> Xarr= new ArrayList<Double>();
 
-        for (int i = 0; i < width; i++) {
-            X = M[0][0] * imageArray[i][2] + M[0][1] * imageArray[i][1] + M[0][2] * imageArray[i][0];
-            Y = M[1][0] * imageArray[i][2] + M[1][1] * imageArray[i][1] + M[1][2] * imageArray[i][0];
-            Z = M[2][0] * imageArray[i][2] + M[2][1] * imageArray[i][1] + M[2][2] * imageArray[i][0];
-            Xarr.add(X * 1000);
-            Yarr.add(Y * 10);
-            Zarr.add(Z * 10);
-
+        for(int i = 0;i< width;i++ ){
+            X = M[0][0]*imageArray[i][2] + M[0][1]*imageArray[i][1] + M[0][2]*imageArray[i][0];
+            Xarr.add(X*1000);
         }
+
         return Xarr;
     }
 
-    private Bitmap decodeImage(String encodedImage) {
-        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        return decodedByte;
+    public List<Integer> findNewX(){
+        new_x = new ArrayList<>();
+        x = width - peak;
+        f = Math.sqrt(Math.pow(x*d/lambda,2)-Math.pow(x,2));
+        for(int i = 0; i < lambdaRange.size();i++){
+            new_x.add((int) Math.round((lambdaRange.get(i) /d)*Math.sqrt(Math.pow(f,2) + Math.pow(x,2))));
+        }
+        return new_x;
     }
+
 }

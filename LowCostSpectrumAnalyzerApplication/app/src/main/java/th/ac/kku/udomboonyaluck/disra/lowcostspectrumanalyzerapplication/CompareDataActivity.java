@@ -5,22 +5,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -32,16 +27,10 @@ import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 
-import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-
-import th.ac.kku.udomboonyaluck.disra.lowcostspectrumanalyzerapplication.util.colletionArraylist;
-import th.ac.kku.udomboonyaluck.disra.lowcostspectrumanalyzerapplication.util.colletionPeakN;
-import th.ac.kku.udomboonyaluck.disra.lowcostspectrumanalyzerapplication.util.imageForAnalyze;
 
 public class CompareDataActivity extends AppCompatActivity {
     TextView mItemSelected;
@@ -56,6 +45,13 @@ public class CompareDataActivity extends AppCompatActivity {
     private Boolean setData = Boolean.FALSE;
     private List<Double> firstData,secondData;
     private List<List<Double>> listOfLists = new ArrayList<List<Double>>();
+    private int width,height;
+    private List<Data> datas;
+    private int position,peak,n,x;
+    double lambda,d,f;
+    List<Double> lambdaRange;
+    List<Integer> new_x,new_lambda;
+    private Button createGraph;
 
 
     @Override
@@ -76,40 +72,30 @@ public class CompareDataActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         chart = (LineChart) findViewById(R.id.chart1);
+        createGraph = findViewById(R.id.btCreateGraph);
 
-//        recyclerView.addOnItemTouchListener(new RecyclerListener(this,
-//                recyclerView, new RecyclerListener.ClickListener() {
-//            @Override
-//            public void onClick(View view, final int position) {
-//
-//                listOfLists.add( analyzeImage(decodeImage((images[position]))));
-//                Log.d("laksana","add" + position);
-//            }
-//
-//            @Override
-//            public void onLongClick(View view, int position) {
-//
-//            }
-//        }));
+        width = decodeImage(datas.get(0).getPosition()).getWidth();
+        height = decodeImage(datas.get(0).getPosition()).getHeight();
+        peak = datas.get(0).getHeight();
+        n = datas.get(0).getN();
 
+        lambda = 460/Math.pow(10,9);
+        d = 1.0/(600*Math.pow(10,3));
 
+        lambdaRange = new ArrayList<>();
+        new_x = new ArrayList<>();
+        new_lambda = new ArrayList<>();
 
-
-
-
-    }
-
-    private void createMutiGraph(List<List<Double>> listOfLists) {
-        setChart();
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        for(int i = 0;i<listOfLists.size();i++){
-
-              dataSets.add(setValue(listOfLists.get(i),itemsNames[i]));
+        for(int i = 380; i <= 740; i++){
+            lambdaRange.add(i/Math.pow(10,9));
         }
-        LineData data = new LineData(dataSets);
-        // set data
-        chart.setData(data);
 
+        createGraph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showGraphWithAllLists();
+            }
+        });
 
     }
 
@@ -132,13 +118,12 @@ public class CompareDataActivity extends AppCompatActivity {
         mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
-//                String item = "";
                 itemsNames = new String[mUserItems.size()];
                 images = new String[mUserItems.size()];
                 for (int i = 0; i < mUserItems.size(); i++) {
                     itemsNames[i] = listItems[mUserItems.get(i)];
                     images[i] = search_imageString(listItems[mUserItems.get(i)]);
-                    listOfLists.add( analyzeImage(decodeImage((images[i]))));
+                    listOfLists.add(setIntervalOfEachImage(decodeImage((images[i]))));
 
                 }
                 MyRecyclerAdapter adapter = new MyRecyclerAdapter(itemsNames,images);
@@ -187,49 +172,10 @@ public class CompareDataActivity extends AppCompatActivity {
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         return decodedByte;
     }
-    public List<Double> analyzeImage(Bitmap bitmap){
+
+    private void createMultiGraph(List<List<Double>> Yaxis, String[] nameGraph) {
         chart.setVisibility(View.VISIBLE);
-            Bitmap imageBitmap = bitmap;
-            //covert image to string and collect imageString
-            double  R ,G ,B;
-            int colorPixel;
-            int width = imageBitmap.getWidth();
-            int height = imageBitmap.getHeight();
-            double[][] imageArray= new double[width][3];
-
-            for(int x = 0; x < width; x++ ){
-                for(int y = 0; y < height;y++){
-                    colorPixel = imageBitmap.getPixel(x,y);
-                    R = Color.red(colorPixel);
-                    G = Color.green(colorPixel);
-                    B = Color.blue(colorPixel);
-
-                    R =  ((0.07*R)+(0.52*G)+(0.23*B))/255;
-                    imageArray[x][0] = R/255;
-                    imageArray[x][1] = R/255;
-                    imageArray[x][2] = R/255;
-
-
-                }
-            }
-
-            double[][] M = new double[][] { { 0.49, 0.31, 0.20 }, { 0.17697, 0.81240, 0.01063 }, { 0.00, 0.01, 0.99 } };
-            double X,Y,Z;
-            List<Double> Xarr= new ArrayList<Double>();
-            List<Double> Yarr= new ArrayList<Double>();
-            List<Double> Zarr= new ArrayList<Double>();
-
-            for(int i = 0;i< width;i++ ){
-                X = M[0][0]*imageArray[i][2] + M[0][1]*imageArray[i][1] + M[0][2]*imageArray[i][0];
-                Y = M[1][0]*imageArray[i][2] + M[1][1]*imageArray[i][1] + M[1][2]*imageArray[i][0];
-                Z = M[2][0]*imageArray[i][2] + M[2][1]*imageArray[i][1] + M[2][2]*imageArray[i][0];
-                Xarr.add(X*1000);
-                Yarr.add(Y*10);
-                Zarr.add(Z*10);
-            }
-            return Xarr;
-    }
-    private void setChart() {
+        chart.getXAxis().setLabelCount(9,true);
         chart.setBackgroundColor(Color.WHITE);
 
         // disable description text
@@ -265,100 +211,152 @@ public class CompareDataActivity extends AppCompatActivity {
 
         // draw legend entries as lines
         l.setForm(Legend.LegendForm.LINE);
-/////////////////////////////////////////////////////////////////
-
-    }
-
-    public double calculate(double x) {
-        List<Data> datas = db.allDatas();
-        int peak = datas.get(0).getHeight();
-        int n = datas.get(0).getN();
-        double d = 1.0/(600*Math.pow(10,3));
-        double lamda = 460/Math.pow(10,9);
-        double l = Math.sqrt(Math.pow((d*peak)/(n*lamda),2)- Math.pow(peak,2));
-        double sin = x/Math.sqrt(Math.pow(x,2)+Math.pow(l,2));
-        return   (d*sin)/n *Math.pow(10,9);
-    }
-    private LineDataSet setValue(List<Double> Yaxis,String nameGraph) {
-        Random rnd = new Random();
-        int GraphColor = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         // add point in graph
-        ArrayList<Entry> values = new ArrayList<>();
 
-        for(int i = 0 ; i < Yaxis.size() ; i++){
-
-            Float y = Float.valueOf("" + Yaxis.get(i));
-            Double x = Double.valueOf(i);
-//            Log.d("123","peak-x : "+peak[0]);
-
-            values.add(new Entry( Float.valueOf((float) calculate(x)),y));
-
+        for(int i = 380 ; i <= 740; i++){
+            new_lambda.add(i);
         }
-
-
 
 //        values.add(new Entry(0, 4));
 
-        LineDataSet set;
-            // create a dataset and give it a type
-            set = new LineDataSet(values, nameGraph);
-            set.setDrawIcons(false);
-            // draw dashed line
-            set.enableDashedLine(10f, 5f, 0f);
-
-            // black lines and points
-            set.setColor(GraphColor);
-            set.setCircleColor(GraphColor);
-
-            // line thickness and point size
-            set.setLineWidth(1f);
-            set.setCircleRadius(3f);
-
-            // draw points as solid circles
-            set.setDrawCircleHole(false);
-
-            // customize legend entry
-            set.setFormLineWidth(1f);
-            set.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-            set.setFormSize(15.f);
-
-            // text size of values
-            set.setValueTextSize(9f);
-
-            // draw selection line as dashed
-            set.enableDashedHighlightLine(10f, 5f, 0f);
-
-            // set the filled area
-            set.setDrawFilled(true);
-            set.setFillFormatter(new IFillFormatter() {
-                @Override
-                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-                    return chart.getAxisLeft().getAxisMinimum();
-                }
-            });
-
-            // set color of filled area
-            if (Utils.getSDKInt() >= 18) {
-                //Not set the graph color
-                set.setFillColor(Color.WHITE);
-            } else {
-                set.setFillColor(GraphColor);
+        LineDataSet set1;
+        List<List<Entry>> values = new ArrayList<>();
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        LineData data;
+        for(int i = 0;i < Yaxis.size(); i++){
+            List<Entry> value = new ArrayList<>();
+            Random rnd = new Random();
+            int graphColor = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            for (int j = 0; j < Yaxis.get(i).size(); j++) {
+                float y = Float.parseFloat("" + Yaxis.get(i).get(j));
+                value.add(new Entry(new_lambda.get(j), y));
             }
 
-//
-//            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-//            dataSets.add(set1); // add the data sets
-//            dataSets.add(set2); // add the data sets
-//
-//            // create a data object with the data sets
-//            LineData data = new LineData(dataSets);
-//
-//            // set data
-//            chart.setData(data);
+            values.add(value);
 
-        return set;
+            if (chart.getData() != null &&
+                    chart.getData().getDataSetCount() > 0) {
+                set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+                set1.setValues(values.get(i));
+                set1.notifyDataSetChanged();
+                chart.getData().notifyDataChanged();
+                chart.notifyDataSetChanged();
+            } else {
+                // create a dataset and give it a type
+                Log.d("set1",nameGraph[i]);
+                set1 = new LineDataSet(values.get(i), nameGraph[i]);
+
+                set1.setDrawIcons(false);
+
+                // draw dashed line
+                set1.enableDashedLine(10f, 5f, 0f);
+
+                // black lines and points
+                set1.setColor(graphColor);
+                set1.setCircleColor(graphColor);
+
+                // line thickness and point size
+                set1.setLineWidth(1f);
+                set1.setCircleRadius(3f);
+
+                // draw points as solid circles
+                set1.setDrawCircleHole(false);
+
+                // customize legend entry
+                set1.setFormLineWidth(1f);
+                set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
+                set1.setFormSize(15.f);
+
+                // text size of values
+                set1.setValueTextSize(9f);
+
+                // draw selection line as dashed
+                set1.enableDashedHighlightLine(10f, 5f, 0f);
+
+                // set the filled area
+                set1.setDrawFilled(true);
+                set1.setFillFormatter(new IFillFormatter() {
+                    @Override
+                    public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                        return chart.getAxisLeft().getAxisMinimum();
+                    }
+                });
+
+                // set color of filled area
+                if (Utils.getSDKInt() >= 18) {
+                    //Not set the graph color
+                    set1.setFillColor(Color.WHITE);
+                } else {
+                    set1.setFillColor(Color.BLACK);
+                }
+                dataSets.add(set1); // add the data sets
+            }
+            // create a data object with the data set
+
+        }
+        data = new LineData(dataSets);
+        // set data
+        chart.setData(data);
     }
-    public void showData(View view){
-        createMutiGraph(listOfLists);
+
+    public List<Double> setIntervalOfEachImage(Bitmap image) {
+        List<Double> intensity,spec380to740;
+        List<Integer> intervalIntensity;
+        intensity = findXarr(image);
+        intervalIntensity = findNewX();
+
+        spec380to740 = new ArrayList<>();
+
+        for(int i = 0;i < intervalIntensity.size();i++){
+            spec380to740.add(intensity.get(intervalIntensity.get(i)-x+peak));
+        }
+        return spec380to740;
     }
+
+    private void showGraphWithAllLists(){
+        List<List<Double>> dataSets = new ArrayList<List<Double>>(listOfLists);
+        createMultiGraph(dataSets,itemsNames);
+    }
+
+    public List<Double> findXarr(Bitmap image){
+        double  R ,G ,B;
+        int colorPixel;
+        double[][] imageArray= new double[width][3];
+
+        for(int x = 0; x < width; x++ ){
+            for(int y = 0; y < height;y++){
+                colorPixel = image.getPixel(x,y);
+                R = Color.red(colorPixel);
+                G = Color.green(colorPixel);
+                B = Color.blue(colorPixel);
+
+                R =  ((0.07*R)+(0.52*G)+(0.23*B))/255;
+                imageArray[x][0] = R/255;
+                imageArray[x][1] = R/255;
+                imageArray[x][2] = R/255;
+            }
+        }
+
+        double[][] M = new double[][] { { 0.49, 0.31, 0.20 }, { 0.17697, 0.81240, 0.01063 }, { 0.00, 0.01, 0.99 } };
+        double X;
+        List<Double> Xarr= new ArrayList<Double>();
+
+        for(int i = 0;i< width;i++ ){
+            X = M[0][0]*imageArray[i][2] + M[0][1]*imageArray[i][1] + M[0][2]*imageArray[i][0];
+            Xarr.add(X*1000);
+        }
+
+        return Xarr;
+    }
+
+    public List<Integer> findNewX(){
+        new_x = new ArrayList<>();
+        x = width - peak;
+        f = Math.sqrt(Math.pow(x*d/lambda,2)-Math.pow(x,2));
+        for(int i = 0; i < lambdaRange.size();i++){
+            new_x.add((int) Math.round((lambdaRange.get(i) /d)*Math.sqrt(Math.pow(f,2) + Math.pow(x,2))));
+        }
+        return new_x;
+    }
+
 }

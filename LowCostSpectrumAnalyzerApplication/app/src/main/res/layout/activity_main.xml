@@ -49,31 +49,30 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/color_bt_pick_image_analyze"
                     android:textAllCaps="false"
-                    android:text="Pick
-                    Image"
+                    android:text="@string/pick_nimage"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"></Button>
+                    android:layout_height="60dp"/>
                 <Button
                     style="@style/Text_bt_analyze"
                     android:layout_margin="10dp"
                     android:background="@drawable/color_bt_graph_sp_analyze"
                     android:textAllCaps="false"
-                    android:text="Create graph spectrum"
-                    android:onClick="analyzeImage"
+                    android:text="@string/create_graph_spectrum"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"></Button>
+                    android:layout_height="60dp"
+                    android:id="@+id/showSpec"/>
                 <Button
                     style="@style/Text_bt_analyze"
-                    android:onClick="showAbsorbGraph"
                     android:background="@drawable/color_bt_graph_ab_analyze"
                     android:layout_margin="10dp"
                     android:textAllCaps="false"
-                    android:text="Create Graph Absorption"
+                    android:text="@string/create_graph_absorption"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"></Button>
+                    android:layout_height="60dp"
+                    android:id="@+id/showAbsorb"/>
             </LinearLayout>
             <LinearLayout
                 android:gravity="center"

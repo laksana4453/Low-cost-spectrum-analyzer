@@ -23,4 +23,7 @@
     <string name="absorbance">Absorbance</string>
     <string name="spectrum">Spectrum</string>
     <string name="show_graphs">Show graphs</string>
+    <string name="create_graph_spectrum">Create graph spectrum</string>
+    <string name="create_graph_absorption">Create Graph Absorption</string>
+    <string name="pick_nimage">Pick \nImage</string>
 </resources>

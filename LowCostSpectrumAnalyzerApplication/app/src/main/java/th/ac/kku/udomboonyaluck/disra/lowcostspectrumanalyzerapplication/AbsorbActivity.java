@@ -290,6 +290,7 @@ public class AbsorbActivity extends AppCompatActivity {
     private void createGraph(final LineChart chart, List<Double> Yaxis) {
         chart.setVisibility(View.VISIBLE);
         chart.getXAxis().setLabelCount(9,true);
+        chart.setBackgroundColor(Color.WHITE);
 
         // disable description text
         chart.getDescription().setEnabled(false);
@@ -395,7 +396,7 @@ public class AbsorbActivity extends AppCompatActivity {
             // set color of filled area
             if (Utils.getSDKInt() >= 18) {
                 //Not set the graph color
-                set1.setFillColor(Color.TRANSPARENT);
+                set1.setFillColor(Color.WHITE);
             } else {
                 set1.setFillColor(Color.BLACK);
             }
